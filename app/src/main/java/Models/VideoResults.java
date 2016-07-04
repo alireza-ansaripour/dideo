@@ -7,5 +7,5 @@ import java.util.HashMap;
  */
 public class VideoResults {
     public Video[] videos;
-    public String next_page_token;
+//    public String next_page_token;
 }

@@ -4,16 +4,16 @@ package Models;
  * Created by alireza on 7/4/16.
  */
 public class Video {
-    String source_id;
-    String source_video_key;
-    String title;
-    String description;
-    String video_key;
-    String dideo_url;
-    String embed_url;
-    String thumbnail;
-    String thumbnail_hq;
-    String duration;
+    public String source_id;
+    public String source_video_key;
+    public String title;
+    public String description;
+    public String video_key;
+    public String dideo_url;
+    public String embed_url;
+    public String thumbnail;
+    public String thumbnail_hq;
+    public String duration;
     SourceVideoDetails source_details;
 
     @Override
