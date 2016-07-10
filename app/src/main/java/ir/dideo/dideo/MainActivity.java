@@ -21,22 +21,10 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-
-import java.sql.SQLException;
 import java.util.List;
 
-import Models.Search;
-=======
-import java.util.List;
-
->>>>>>> 03b89c9a147b5340ae3c85aff08c7ec669834cf8
 import Models.SearchAPI;
 import Models.VideoResults;
-import db.DBHelper;
 
 public class MainActivity extends AppCompatActivity {
     TextView textView = null;
@@ -49,32 +37,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-<<<<<<< HEAD
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Dao<Search,String> searches = OpenHelperManager.getHelper(getApplicationContext(), DBHelper.class).getSearchDao();
-                List<Search>searchList = null;
-                try {
-                    searchList = searches.queryForAll();
-                    Snackbar.make(view, searchList.size()+"", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-
         this.textView = (TextView)findViewById(R.id.text);
 
         items[0] = "Alireza";
@@ -143,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFail() {
-                    
+
                 }
             };
         }
