@@ -12,8 +12,17 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import Models.Search;
 import Models.SearchAPI;
 import Models.VideoResults;
+import db.DBHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,20 +33,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        final TextView textView = (TextView)findViewById(R.id.text);
-        new SearchAPI(getApplicationContext(),"livan",null) {
-            @Override
-            public void onResults(VideoResults results) {
-                textView.setText(results.videos[0].toString());
-            }
-        };
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Dao<Search,String> searches = OpenHelperManager.getHelper(getApplicationContext(), DBHelper.class).getSearchDao();
+                List<Search>searchList = null;
+                try {
+                    searchList = searches.queryForAll();
+                    Snackbar.make(view, searchList.size()+"", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
     }
