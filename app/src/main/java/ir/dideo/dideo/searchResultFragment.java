@@ -1,6 +1,6 @@
 package ir.dideo.dideo;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,15 +24,5 @@ public class searchResultFragment extends Fragment {
     ArrayAdapter<Video> Results = null;
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-        videos[0] = new Video();
-        videos[0].title = "vid1";
-        videos[1] = new Video();
-        videos[1].title = "vid2";
-        videos[2] = new Video();
-        videos[2].title = "vid3";
-        listView = (ListView)view.findViewById(R.id.listview);
-        Results = new ArrayAdapter<Video>(getContext().getApplicationContext(), R.layout.search_result_freagment,videos);
-        listView.setAdapter(Results);
     }
 }

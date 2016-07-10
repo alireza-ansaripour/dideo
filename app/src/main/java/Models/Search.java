@@ -19,9 +19,9 @@ import db.DBHelper;
 @DatabaseTable
 public class Search {
     @DatabaseField(id = true)
-    String query;
+    public String query;
     @DatabaseField
-    int count;
+    public int count;
     public Search(){}
     public Search(String query){
         this.query = query;
