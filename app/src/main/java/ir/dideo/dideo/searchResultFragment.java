@@ -33,7 +33,7 @@ public class searchResultFragment extends Fragment {
         videos[2].title = "vid3";
 
 
-        
+
         listView = (ListView)view.findViewById(R.id.listview);
         Results = new ArrayAdapter<Video>(getContext().getApplicationContext(), R.layout.search_result_freagment,videos);
         listView.setAdapter(Results);
