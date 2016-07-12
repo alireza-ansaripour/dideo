@@ -6,22 +6,17 @@ import android.content.Intent;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuInflater;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
-import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -75,23 +70,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
-        MenuItem menuItemCompat = menu.findItem(R.id.search);
+        final MenuItem menuItemCompat = menu.findItem(R.id.search);
         // Associate searchable configuration with the SearchView
         final SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView =
                 (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
+
         searchView.setIconifiedByDefault(false);
 
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                Toast.makeText(getApplicationContext(), "close", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
 
         final String[] from = new String[] {"cityName"};
         final int[] to = new int[] {R.id.query};
@@ -106,15 +95,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onSuggestionClick(int position) {
                 // Your code here
-                searchView.setQuery(suggests[position],false);
-                Toast.makeText(getApplicationContext(),suggests[position],Toast.LENGTH_SHORT).show();
+                searchView.setQuery(suggests[position], false);
+                Toast.makeText(getApplicationContext(), suggests[position], Toast.LENGTH_SHORT).show();
                 return true;
             }
 
             @Override
             public boolean onSuggestionSelect(int position) {
                 // Your code here
-                Toast.makeText(getApplicationContext(),suggests[position]+" selected",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), suggests[position] + " selected", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -126,11 +115,23 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                populateAdapter(s,arrayAdapter);
+                populateAdapter(s, arrayAdapter);
                 return false;
             }
         });
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean queryTextFocused) {
 
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (!queryTextFocused) {
+                    Log.d("Search view", "Closed");
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                } else {
+                    imm.showSoftInput(view, 0);
+                }
+            }
+        });
         return true;
     }
     @Override
