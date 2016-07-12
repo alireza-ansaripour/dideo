@@ -1,5 +1,6 @@
 package ir.dideo.dideo;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -38,6 +40,7 @@ import java.util.List;
 
 import Models.Search;
 import Models.SearchAPI;
+import Models.Video;
 import Models.VideoResults;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        searchResultFragment fragment = new searchResultFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -146,7 +147,9 @@ public class MainActivity extends AppCompatActivity {
             new SearchAPI(getApplicationContext(), query, null) {
                 @Override
                 public void onResults(VideoResults results) {
-
+                    searchResultFragment fragment = new searchResultFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                    fragment.videos = results.videos;
                 }
 
                 @Override
