@@ -69,7 +69,8 @@ public class SearchResultAdapter extends BaseAdapter {
         TextView textView = (TextView)convertView.findViewById(R.id.resultText);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.resultImage);
         Video item = (Video) getItem(position);
-        UrlImageViewHelper.setUrlDrawable(imageView, item.thumbnail);
+//        UrlImageViewHelper.setUrlDrawable(imageView, item.thumbnail);
+        UrlImageViewHelper.setUrlDrawable(imageView, item.thumbnail_hq, R.drawable.placeholder);
         textView.setText(item.title);
         return convertView;
     }
