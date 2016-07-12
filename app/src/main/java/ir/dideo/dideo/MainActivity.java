@@ -10,6 +10,7 @@ import android.provider.BaseColumns;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onSuggestionClick(int position) {
                 // Your code here
-                searchView.setQuery(suggests[position],false);
+                searchView.setQuery(suggests[position], false);
                 return true;
             }
 
