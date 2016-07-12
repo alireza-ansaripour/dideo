@@ -1,5 +1,6 @@
 package ir.dideo.dideo;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +10,6 @@ import android.provider.BaseColumns;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,13 +19,9 @@ import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,16 +32,11 @@ import Models.SearchAPI;
 import Models.VideoResults;
 
 public class MainActivity extends AppCompatActivity {
-    TextView textView = null;
-    String[] items = new String[3];
-    ArrayAdapter<String> itemsAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        searchResultFragment fragment = new searchResultFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -58,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        Toast.makeText(getApplicationContext(),"d",Toast.LENGTH_SHORT).show();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -95,15 +85,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onSuggestionClick(int position) {
                 // Your code here
-                searchView.setQuery(suggests[position], false);
-                Toast.makeText(getApplicationContext(), suggests[position], Toast.LENGTH_SHORT).show();
+                searchView.setQuery(suggests[position],false);
                 return true;
             }
 
             @Override
             public boolean onSuggestionSelect(int position) {
                 // Your code here
-                Toast.makeText(getApplicationContext(), suggests[position] + " selected", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -143,11 +131,12 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //use the query to search your data somehow
-            Toast.makeText(getApplicationContext(),query,Toast.LENGTH_SHORT).show();
             new SearchAPI(getApplicationContext(), query, null) {
                 @Override
                 public void onResults(VideoResults results) {
-
+                    searchResultFragment fragment = new searchResultFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                    fragment.videos = results.videos;
                 }
 
                 @Override
