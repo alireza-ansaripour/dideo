@@ -70,8 +70,10 @@ public class searchResultFragment extends Fragment {
 
                         }
                     };
-                    videos.addAll(new ArrayList<Video>(Arrays.asList(moreSearchResults)));
-                    Results.notifyDataSetChanged();
+                    if (moreSearchResults != null){
+                        videos.addAll(new ArrayList<Video>(Arrays.asList(moreSearchResults)));
+                        Results.notifyDataSetChanged();
+                    }
                 }
             }
         });
