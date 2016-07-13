@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import Models.Video;
 
@@ -30,22 +32,22 @@ import Models.Video;
 public class SearchResultAdapter extends BaseAdapter {
     Object[] objects = null;
     Context context;
-    Video[] items;
-    public SearchResultAdapter(Context context, Video[] items) {
+    ArrayList<Video> items;
+    public SearchResultAdapter(Context context, ArrayList<Video> items) {
         this.context = context;
         this.items = items;
     }
     @Override
     public int getCount() {
         if (items != null)
-            return items.length;
+            return items.size();
         else
             return 0;
     }
 
     @Override
     public Object getItem(int position) {
-            return items[position];
+        return items.get(position);
     }
 
     @Override
@@ -69,7 +71,6 @@ public class SearchResultAdapter extends BaseAdapter {
         TextView textView = (TextView)convertView.findViewById(R.id.resultText);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.resultImage);
         Video item = (Video) getItem(position);
-//        UrlImageViewHelper.setUrlDrawable(imageView, item.thumbnail);
         UrlImageViewHelper.setUrlDrawable(imageView, item.thumbnail_hq, R.drawable.placeholder);
         textView.setText(item.title);
         return convertView;
@@ -78,5 +79,4 @@ public class SearchResultAdapter extends BaseAdapter {
 class ViewHolder{
     TextView textView;
     ImageView imageView;
-    WebView webView;
 }

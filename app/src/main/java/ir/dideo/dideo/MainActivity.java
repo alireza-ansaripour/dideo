@@ -21,9 +21,11 @@ import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 import Models.Search;
 import Models.SearchAPI;
+import Models.Video;
 import Models.VideoResults;
 
 public class MainActivity extends AppCompatActivity {
@@ -163,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
     }
     private class MyTask extends AsyncTask<Void, Void, Void> {
         String query = null;
-        VideoResults searchResults = null;
         MyTask(String query){
             this.query = query;
         }
@@ -185,6 +187,8 @@ public class MainActivity extends AppCompatActivity {
             progressBarHolder.setVisibility(View.GONE);
         }
 
+        VideoResults searchResults;
+
         @Override
         protected Void doInBackground(Void... params) {
 
@@ -193,13 +197,15 @@ public class MainActivity extends AppCompatActivity {
                 public void onResults(VideoResults results) {
                     searchResultFragment fragment = new searchResultFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-                    fragment.videos = results.videos;
+                    fragment.videos = new ArrayList<Video>(Arrays.asList(results.videos));
+                    Log.d("SearchR", "onResults: "+query);
                     searchResults = results;
                 }
 
                 @Override
                 public void onFail() {
-
+                    Log.d("SearchR", "onFail: "+query);
+                    searchResults = new VideoResults();
                 }
             };
             while(searchResults == null){
