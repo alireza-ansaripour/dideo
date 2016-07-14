@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,47 +38,44 @@ public class searchResultFragment extends Fragment {
         Results = new SearchResultAdapter(getContext().getApplicationContext(),videos);
         listView = (ListView) view.findViewById(R.id.SearchResultListView);
         listView.setAdapter(Results);
-        TextView footer = new TextView(view.getContext());
-        footer.setText("Loading...");
-        listView.addFooterView(footer);
+//        final TextView footer = new TextView(view.getContext());
+//        footer.setText("Loading...");
+        final View footer = LayoutInflater.from(view.getContext()).inflate(R.layout.search_result_load_more, null);
+        listView.addFooterView(footer,null,false);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            int currentScrollState;
-            int currentFirstVisibleItem;
-            int currentVisibleItemCount;
+            boolean flag_loading = false;
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                this.currentScrollState = scrollState;
-                this.isScrollCompleted();
+
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                this.currentFirstVisibleItem = firstVisibleItem;
-                this.currentVisibleItemCount = visibleItemCount;
-            }
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
 
-            Video[] moreSearchResults;
+                if(firstVisibleItem+visibleItemCount == totalItemCount && totalItemCount!=0)
+                {
+                    if(!flag_loading)
+                    {
+                        flag_loading = true;
+                        new SearchAPI(view.getContext(), "Salam", null) {
+                            @Override
+                            public void onResults(VideoResults results) {
+                                Log.d("SearchR", "onResults: "+"Salam");
+                                videos.addAll(new ArrayList<Video>(Arrays.asList(results.videos)));
+                                Results.notifyDataSetChanged();
+                            }
 
-            private void isScrollCompleted() {
-                if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE) {
-
-                    new SearchAPI(view.getContext(), "Salam", null) {
-                        @Override
-                        public void onResults(VideoResults results) {
-                            moreSearchResults = results.videos;
-                        }
-
-                        @Override
-                        public void onFail() {
-
-                        }
-                    };
-                    if (moreSearchResults != null){
-                        videos.addAll(new ArrayList<Video>(Arrays.asList(moreSearchResults)));
-                        Results.notifyDataSetChanged();
+                            @Override
+                            public void onFail() {
+                                Log.d("SearchR", "onFail: "+"Salam");
+                            }
+                        };
                     }
                 }
             }
+
         });
     }
 }
