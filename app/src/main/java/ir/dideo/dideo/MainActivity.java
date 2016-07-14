@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+//        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
         if(enableTabView){
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
