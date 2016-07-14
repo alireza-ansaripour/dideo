@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.MatrixCursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.view.MenuItemCompat;
@@ -15,24 +16,32 @@ import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
+import android.view.animation.AlphaAnimation;
 import android.widget.CursorAdapter;
+import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import Models.Search;
 import Models.SearchAPI;
+import Models.Video;
 import Models.VideoResults;
 
 public class MainActivity extends AppCompatActivity {
+    AlphaAnimation inAnimation;
+    AlphaAnimation outAnimation;
+    FrameLayout progressBarHolder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -41,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
     }
 
@@ -67,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView =
                 (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.search));
-
         searchView.setIconifiedByDefault(false);
 
         searchView.setSearchableInfo(
@@ -104,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                populateAdapter(s, arrayAdapter);
+                populateAdapter(s,arrayAdapter);
                 return false;
             }
         });
@@ -132,19 +141,7 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //use the query to search your data somehow
-            new SearchAPI(getApplicationContext(), query, null) {
-                @Override
-                public void onResults(VideoResults results) {
-                    searchResultFragment fragment = new searchResultFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-                    fragment.videos = results.videos;
-                }
-
-                @Override
-                public void onFail() {
-
-                }
-            };
+            new MyTask(query).execute();
         }
     }
     private void populateAdapter(String query,CursorAdapter mAdapter) {
@@ -171,6 +168,56 @@ public class MainActivity extends AppCompatActivity {
             mAdapter.changeCursor(c);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    private class MyTask extends AsyncTask<Void, Void, Void> {
+        String query = null;
+        MyTask(String query){
+            this.query = query;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            inAnimation = new AlphaAnimation(0f, 1f);
+            inAnimation.setDuration(200);
+            progressBarHolder.setAnimation(inAnimation);
+            progressBarHolder.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            outAnimation = new AlphaAnimation(1f, 0f);
+            outAnimation.setDuration(200);
+            progressBarHolder.setAnimation(outAnimation);
+            progressBarHolder.setVisibility(View.GONE);
+        }
+
+        VideoResults searchResults;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            new SearchAPI(getApplicationContext(), query, null) {
+                @Override
+                public void onResults(VideoResults results) {
+                    searchResultFragment fragment = new searchResultFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                    fragment.videos = new ArrayList<Video>(Arrays.asList(results.videos));
+                    Log.d("SearchR", "onResults: "+query);
+                    searchResults = results;
+                }
+
+                @Override
+                public void onFail() {
+                    Log.d("SearchR", "onFail: "+query);
+                    searchResults = new VideoResults();
+                }
+            };
+            while(searchResults == null){
+
+            }
+            return null;
         }
     }
 }

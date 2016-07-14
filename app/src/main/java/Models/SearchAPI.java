@@ -42,7 +42,6 @@ public abstract class SearchAPI {
             else {
                 search.count = search.count+1;
                 searches.update(search);
-                Toast.makeText(context,search.count+"",Toast.LENGTH_SHORT).show();
             }
         } catch (SQLException e) {
             e.printStackTrace();
