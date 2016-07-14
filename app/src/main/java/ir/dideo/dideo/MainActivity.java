@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+        Intent intent = new Intent(MainActivity.this,MediaPlayerActivity.class);
+        startActivity(intent);
 
         if(enableTabView){
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
