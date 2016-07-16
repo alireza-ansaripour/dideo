@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.MatrixCursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.design.widget.TabLayout;
@@ -13,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,9 +35,7 @@ import Models.Video;
 import Models.VideoResults;
 
 public class MainActivity extends AppCompatActivity {
-    AlphaAnimation inAnimation;
-    AlphaAnimation outAnimation;
-    FrameLayout progressBarHolder;
+
     boolean enableTabView = true;
 
     @Override
@@ -50,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
         if(enableTabView){
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);

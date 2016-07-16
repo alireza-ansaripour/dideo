@@ -3,6 +3,7 @@ package ir.dideo.dideo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,9 +13,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.AlphaAnimation;
+import android.widget.FrameLayout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import Models.SearchAPI;
+import Models.Video;
+import Models.VideoResults;
 
 public class ResultActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    AlphaAnimation inAnimation;
+    AlphaAnimation outAnimation;
+    FrameLayout progressBarHolder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +36,8 @@ public class ResultActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -40,6 +47,39 @@ public class ResultActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+        //Search Result
+        String query = "Hello";
+        inAnimation = new AlphaAnimation(0f, 1f);
+        inAnimation.setDuration(200);
+        progressBarHolder.setAnimation(inAnimation);
+        progressBarHolder.setVisibility(View.VISIBLE);
+
+        new SearchAPI(getApplicationContext(), query, null) {
+            @Override
+            public void onResults(VideoResults results) {
+                Log.d("SearchResult", "onResults");
+                searchResultFragment fragment = new searchResultFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.resultContainer, fragment).commit();
+                fragment.videos = new ArrayList<Video>(Arrays.asList(results.videos));
+
+                outAnimation = new AlphaAnimation(1f, 0f);
+                outAnimation.setDuration(200);
+                progressBarHolder.setAnimation(outAnimation);
+                progressBarHolder.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFail() {
+                Log.d("SearchResult", "onFail");
+                outAnimation = new AlphaAnimation(1f, 0f);
+                outAnimation.setDuration(200);
+                progressBarHolder.setAnimation(outAnimation);
+                progressBarHolder.setVisibility(View.GONE);
+            }
+        };
     }
 
     @Override
