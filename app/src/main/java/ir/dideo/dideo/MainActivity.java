@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
             //use the query to search your data somehow
 
             Intent i = new Intent(this,ResultActivity.class);
+            i.putExtra("query",query);
             startActivity(i);
         }
     }
