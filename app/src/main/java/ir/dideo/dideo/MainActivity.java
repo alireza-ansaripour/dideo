@@ -1,11 +1,9 @@
 package ir.dideo.dideo;
 
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.MatrixCursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.design.widget.TabLayout;
@@ -14,8 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -23,8 +21,6 @@ import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
-
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import Models.Search;
 import Models.SearchAPI;
@@ -168,7 +163,35 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //use the query to search your data somehow
-            new MyTask(query).execute();
+
+            inAnimation = new AlphaAnimation(0f, 1f);
+            inAnimation.setDuration(200);
+            progressBarHolder.setAnimation(inAnimation);
+            progressBarHolder.setVisibility(View.VISIBLE);
+
+            new SearchAPI(getApplicationContext(), query, null) {
+                @Override
+                public void onResults(VideoResults results) {
+                    Log.d("SearchResult", "onResults");
+                    searchResultFragment fragment = new searchResultFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                    fragment.videos = new ArrayList<Video>(Arrays.asList(results.videos));
+
+                    outAnimation = new AlphaAnimation(1f, 0f);
+                    outAnimation.setDuration(200);
+                    progressBarHolder.setAnimation(outAnimation);
+                    progressBarHolder.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFail() {
+                    Log.d("SearchResult", "onFail");
+                    outAnimation = new AlphaAnimation(1f, 0f);
+                    outAnimation.setDuration(200);
+                    progressBarHolder.setAnimation(outAnimation);
+                    progressBarHolder.setVisibility(View.GONE);
+                }
+            };
         }
     }
     private void populateAdapter(String query,CursorAdapter mAdapter) {
@@ -195,56 +218,6 @@ public class MainActivity extends AppCompatActivity {
             mAdapter.changeCursor(c);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-    private class MyTask extends AsyncTask<Void, Void, Void> {
-        String query = null;
-        MyTask(String query){
-            this.query = query;
-        }
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            inAnimation = new AlphaAnimation(0f, 1f);
-            inAnimation.setDuration(200);
-            progressBarHolder.setAnimation(inAnimation);
-            progressBarHolder.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            outAnimation = new AlphaAnimation(1f, 0f);
-            outAnimation.setDuration(200);
-            progressBarHolder.setAnimation(outAnimation);
-            progressBarHolder.setVisibility(View.GONE);
-        }
-
-        VideoResults searchResults;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            new SearchAPI(getApplicationContext(), query, null) {
-                @Override
-                public void onResults(VideoResults results) {
-                    searchResultFragment fragment = new searchResultFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-                    fragment.videos = new ArrayList<Video>(Arrays.asList(results.videos));
-                    Log.d("SearchR", "onResults: "+query);
-                    searchResults = results;
-                }
-
-                @Override
-                public void onFail() {
-                    Log.d("SearchR", "onFail: "+query);
-                    searchResults = new VideoResults();
-                }
-            };
-//            while(searchResults == null){
-//
-//            }
-            return null;
         }
     }
 }
