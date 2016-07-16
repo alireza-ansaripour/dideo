@@ -37,11 +37,11 @@ public class searchResultFragment extends Fragment {
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         Results = new SearchResultAdapter(getContext().getApplicationContext(),videos);
         listView = (ListView) view.findViewById(R.id.SearchResultListView);
-        listView.setAdapter(Results);
 //        final TextView footer = new TextView(view.getContext());
 //        footer.setText("Loading...");
         final View footer = LayoutInflater.from(view.getContext()).inflate(R.layout.search_result_load_more, null);
         listView.addFooterView(footer,null,false);
+        listView.setAdapter(Results);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             boolean flag_loading = false;
 

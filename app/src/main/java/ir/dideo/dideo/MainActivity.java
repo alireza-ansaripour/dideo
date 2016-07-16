@@ -241,9 +241,9 @@ public class MainActivity extends AppCompatActivity {
                     searchResults = new VideoResults();
                 }
             };
-            while(searchResults == null){
-
-            }
+//            while(searchResults == null){
+//
+//            }
             return null;
         }
     }
