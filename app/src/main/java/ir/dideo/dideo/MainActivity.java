@@ -35,9 +35,7 @@ import Models.Video;
 import Models.VideoResults;
 
 public class MainActivity extends AppCompatActivity {
-    AlphaAnimation inAnimation;
-    AlphaAnimation outAnimation;
-    FrameLayout progressBarHolder;
+
     boolean enableTabView = true;
 
     @Override
@@ -48,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        progressBarHolder = (FrameLayout) findViewById(R.id.progressBarHolder);
 
         if(enableTabView){
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -164,34 +161,8 @@ public class MainActivity extends AppCompatActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //use the query to search your data somehow
 
-            inAnimation = new AlphaAnimation(0f, 1f);
-            inAnimation.setDuration(200);
-            progressBarHolder.setAnimation(inAnimation);
-            progressBarHolder.setVisibility(View.VISIBLE);
-
-            new SearchAPI(getApplicationContext(), query, null) {
-                @Override
-                public void onResults(VideoResults results) {
-                    Log.d("SearchResult", "onResults");
-                    searchResultFragment fragment = new searchResultFragment();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-                    fragment.videos = new ArrayList<Video>(Arrays.asList(results.videos));
-
-                    outAnimation = new AlphaAnimation(1f, 0f);
-                    outAnimation.setDuration(200);
-                    progressBarHolder.setAnimation(outAnimation);
-                    progressBarHolder.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onFail() {
-                    Log.d("SearchResult", "onFail");
-                    outAnimation = new AlphaAnimation(1f, 0f);
-                    outAnimation.setDuration(200);
-                    progressBarHolder.setAnimation(outAnimation);
-                    progressBarHolder.setVisibility(View.GONE);
-                }
-            };
+            Intent i = new Intent(this,ResultActivity.class);
+            startActivity(i);
         }
     }
     private void populateAdapter(String query,CursorAdapter mAdapter) {
