@@ -1,6 +1,5 @@
 package ir.dideo.dideo;
 
-import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -166,9 +165,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleIntent(Intent intent) {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+
+
+
             String query = intent.getStringExtra(SearchManager.QUERY);
             //use the query to search your data somehow
-            new MyTask(query).execute();
+
+            Intent i = new Intent(this,ResultActivity.class);
+            startActivity(i);
         }
     }
     private void populateAdapter(String query,CursorAdapter mAdapter) {
