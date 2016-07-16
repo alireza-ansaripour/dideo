@@ -1,5 +1,6 @@
 package ir.dideo.dideo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -51,15 +52,19 @@ public class ResultActivity extends AppCompatActivity
 
 
         //Search Result
-        String query = "Hello";
+        Intent i = getIntent();
         inAnimation = new AlphaAnimation(0f, 1f);
         inAnimation.setDuration(200);
         progressBarHolder.setAnimation(inAnimation);
         progressBarHolder.setVisibility(View.VISIBLE);
 
+        Bundle bundle = i.getExtras();
+        String query = bundle.getString("query");
+        Log.i("query",query);
         new SearchAPI(getApplicationContext(), query, null) {
             @Override
             public void onResults(VideoResults results) {
+
                 Log.d("SearchResult", "onResults");
                 searchResultFragment fragment = new searchResultFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.resultContainer, fragment).commit();
