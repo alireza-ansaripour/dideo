@@ -1,9 +1,7 @@
-package ir.dideo.dideo;
+package ir.dideo.dideo.activites;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,6 +21,7 @@ import java.util.Arrays;
 import Models.SearchAPI;
 import Models.Video;
 import Models.VideoResults;
+import ir.dideo.dideo.R;
 
 public class ResultActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

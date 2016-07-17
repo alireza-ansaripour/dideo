@@ -1,8 +1,12 @@
-package ir.dideo.dideo;
+package ir.dideo.dideo.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import ir.dideo.dideo.tabFragments.TabFragment1;
+import ir.dideo.dideo.tabFragments.TabFragment2;
+import ir.dideo.dideo.tabFragments.TabFragment3;
 
 /**
  * Created by Navid on 7/14/16.

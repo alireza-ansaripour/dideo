@@ -1,6 +1,8 @@
 package Models;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
@@ -31,5 +33,13 @@ public class Search {
         Dao<Search,String> searches = OpenHelperManager.getHelper(context, DBHelper.class).getSearchDao();
         List<Search> searchList = searches.queryForAll();
         return searchList.toArray(new Search[searchList.size()]);
+    }
+    public static void deleteSearch(Context context, String id){
+        Dao<Search,String> searches = OpenHelperManager.getHelper(context, DBHelper.class).getSearchDao();
+        try {
+            searches.delete(searches.queryForId(id));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

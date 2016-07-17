@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/zero_padding"
     android:paddingTop="@dimen/zero_padding"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ir.dideo.dideo.ResultActivity"
+    tools:context=".activites.ResultActivity"
     tools:showIn="@layout/app_bar_result">
 
     <FrameLayout

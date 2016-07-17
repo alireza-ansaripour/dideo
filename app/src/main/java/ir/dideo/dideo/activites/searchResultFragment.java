@@ -1,4 +1,4 @@
-package ir.dideo.dideo;
+package ir.dideo.dideo.activites;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -7,13 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +15,8 @@ import java.util.Arrays;
 import Models.SearchAPI;
 import Models.Video;
 import Models.VideoResults;
+import ir.dideo.dideo.R;
+import ir.dideo.dideo.adapters.SearchResultAdapter;
 
 /**
  * Created by Navid on 7/10/16.
