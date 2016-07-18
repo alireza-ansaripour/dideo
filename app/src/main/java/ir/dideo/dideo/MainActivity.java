@@ -11,28 +11,20 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.CursorAdapter;
-import android.widget.FrameLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import Models.Search;
-import Models.SearchAPI;
-import Models.Video;
-import Models.VideoResults;
 
 public class MainActivity extends AppCompatActivity {
 
