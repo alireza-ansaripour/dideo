@@ -34,10 +34,15 @@ public class Video {
     public String thumbnail_hq;
     @DatabaseField
     public String duration;
+
+    public Links links;
     SourceVideoDetails source_details;
     ArrayList<Tag>tags = new ArrayList<>();
     @Override
     public String toString() {
         return source_id+"\n"+source_video_key+"\n"+title+"\n"+description+"\n"+video_key+"\n"+dideo_url+"\n"+embed_url+"\n"+source_details;
     }
+
+
+
 }

@@ -23,11 +23,11 @@ import Models.Video;
 import Models.VideoResults;
 import ir.dideo.dideo.R;
 
-public class ResultActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class ResultActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     AlphaAnimation inAnimation;
     AlphaAnimation outAnimation;
     FrameLayout progressBarHolder;
+    private boolean showing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +63,16 @@ public class ResultActivity extends AppCompatActivity
         new SearchAPI(getApplicationContext(), query, null) {
             @Override
             public void onResults(VideoResults results) {
+                if(showing){
+                    searchResultFragment fragment = new searchResultFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.resultContainer, fragment).commit();
+                    fragment.videos = new ArrayList<Video>(Arrays.asList(results.videos));
 
-                Log.d("SearchResult", "onResults");
-                searchResultFragment fragment = new searchResultFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.resultContainer, fragment).commit();
-                fragment.videos = new ArrayList<Video>(Arrays.asList(results.videos));
-
-                outAnimation = new AlphaAnimation(1f, 0f);
-                outAnimation.setDuration(200);
-                progressBarHolder.setAnimation(outAnimation);
-                progressBarHolder.setVisibility(View.GONE);
+                    outAnimation = new AlphaAnimation(1f, 0f);
+                    outAnimation.setDuration(200);
+                    progressBarHolder.setAnimation(outAnimation);
+                    progressBarHolder.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -105,6 +105,7 @@ public class ResultActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -141,5 +142,11 @@ public class ResultActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        showing = false;
+        super.onStop();
     }
 }

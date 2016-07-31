@@ -2,6 +2,7 @@ package ir.dideo.dideo.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.shahroz.svlibrary.widgets.SuggestionAdapter;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import Models.Search;
 import ir.dideo.dideo.R;
@@ -22,13 +26,13 @@ import ir.dideo.dideo.R;
  * Created by alireza on 7/17/16.
  */
 
-public class SuggestAdapter extends BaseAdapter {
-    Object[] objects = null;
+public class SuggestAdapter extends SuggestionAdapter {
     Context context;
-    ArrayList<String> items;
-    public SuggestAdapter(Context context, ArrayList<String> items) {
+
+    public SuggestAdapter(Context context, List<String> suggestions) {
         this.context = context;
-        this.items = items;
+        this.suggestions = suggestions;
+        this.items = suggestions;
     }
     @Override
     public int getCount() {
@@ -37,7 +41,6 @@ public class SuggestAdapter extends BaseAdapter {
         else
             return 0;
     }
-
     @Override
     public Object getItem(int position) {
         return items.get(position);
@@ -72,9 +75,11 @@ public class SuggestAdapter extends BaseAdapter {
                 }
                 for (Search search : searches)
                     items.add(search.query);
+                setSuggestions(items);
                 notifyDataSetInvalidated();
             }
         });
+        delete.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
         String item =(String) getItem(position);
         textView.setText(item);
         return convertView;

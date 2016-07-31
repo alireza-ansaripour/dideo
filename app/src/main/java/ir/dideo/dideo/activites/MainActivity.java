@@ -19,6 +19,7 @@ import com.shahroz.svlibrary.interfaces.onSimpleSearchActionsListener;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import Models.Search;
 import ir.dideo.dideo.R;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements onSimpleSearchAct
     private MenuItem searchItem;
     private boolean searchActive = false;
     String tag = "Search view";
+    SuggestAdapter suggestAdapter;
     private FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +43,6 @@ public class MainActivity extends AppCompatActivity implements onSimpleSearchAct
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        Intent i = new Intent(this,MediaPlayerActivity.class);
-        startActivity(i);
         mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         mSearchView = new com.shahroz.svlibrary.widgets.MaterialSearchView(this);
         ArrayList<String> suggests = new ArrayList<>();
@@ -55,14 +55,14 @@ public class MainActivity extends AppCompatActivity implements onSimpleSearchAct
         for (Search search : searches){
             suggests.add(search.query);
         }
-        SuggestAdapter suggestAdapter = new SuggestAdapter(getApplicationContext(),suggests);
+        suggestAdapter = new SuggestAdapter(getApplicationContext(),suggests);
+        mSearchView.setSuggestions(suggests.toArray(new String[suggests.size()]));
         mSearchView.setSuggestionAdapter(suggestAdapter);
         mSearchView.setOnSearchListener(this);
         mSearchView.setSearchResultsListener(this);
         mSearchView.setHintText("Search");
 
         if (mToolbar != null) {
-            // Delay adding SearchView until Toolbar has finished loading
             mToolbar.post(new Runnable() {
                 @Override
                 public void run() {
@@ -145,6 +145,18 @@ public class MainActivity extends AppCompatActivity implements onSimpleSearchAct
 
     @Override
     public void searchViewOpened() {
+        try {
+            Search[] searches = Search.getAllSearches(getApplicationContext());
+            ArrayList<String> items = new ArrayList<>();
+            for(Search search : searches)
+                items.add(search.query);
+            suggestAdapter.setItems(items);
+            suggestAdapter.notifyDataSetChanged();
+            mSearchView.onQuery("");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
